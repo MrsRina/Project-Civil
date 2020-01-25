@@ -84,8 +84,3 @@ Run the service:
 ```
 $ docker-compose up
 ```
-
-
-# Dev Demo
-
-A demo version for development access is available [here](https://black-mage-devel--brunolcarli.repl.co/graphql/)!
