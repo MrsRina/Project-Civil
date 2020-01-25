@@ -1,0 +1,6 @@
+-r common.txt
+
+bumpversion==0.5.3
+docker-compose==1.19.0
+bpython==0.18
+pylint==2.4.1

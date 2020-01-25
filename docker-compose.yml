@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+
+  blackmage_db:
+    image: mariadb:10.3
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    ports:
+      - "3306:3306"
+
+  blackmage:
+    build: .    
+    image: blackmage:devel
+    restart: on-failure
+    container_name: blackmage_service_container
+    command: gunicorn -w 3 server.wsgi:application -b :8000
+    environment:
+      DJANGO_SETTINGS_MODULE: $DJANGO_SETTINGS_MODULE
+      DJANGO_SECRET_KEY: $DJANGO_SECRET_KEY
+    volumes:
+      - .:/app
+      - static_data:/app/static
+    ports:
+      - "8000:8000"
+    depends_on:
+      - blackmage_db
+
+  migration:
+    build: .    
+    image: blackmage:devel
+    restart: on-failure
+    container_name: migrations
+    command: python manage.py migrate
+    environment:
+      DJANGO_SETTINGS_MODULE: $DJANGO_SETTINGS_MODULE
+      DJANGO_SECRET_KEY: $DJANGO_SECRET_KEY
+
+
+volumes:
+  static_data:
